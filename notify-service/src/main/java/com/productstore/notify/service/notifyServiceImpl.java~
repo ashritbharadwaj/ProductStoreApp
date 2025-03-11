@@ -1,0 +1,57 @@
+package com.productstore.notify.service;
+
+import com.productstore.order.dto.OrderDto;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.kafka.common.protocol.types.Field;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Log4j2
+@Service
+@AllArgsConstructor
+public class notifyServiceImpl implements notifyService {
+
+    private final JavaMailSender javaMailSender;
+
+    @Override
+    @KafkaListener(topics = "order-topic", groupId = "group_id")
+    public void listenOrder(OrderDto orderDto) {
+        System.out.println("Recieved Order");
+        System.out.println(orderDto);
+        sendOrderNotification(orderDto);
+    }
+
+    public void sendOrderNotification(OrderDto orderDto) {
+        String userEmail = orderDto.getUserEmail();
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(userEmail);
+        message.setSubject(String.format("Order#%d Status:%s", orderDto.getOrderId(), orderDto.getStatus()));
+        message.setText(createEmailBody(orderDto));
+
+        javaMailSender.send(message);
+    }
+
+    private String createEmailBody(OrderDto order) {
+        return String.format(
+                "Thank you for your order!\n\n" +
+                        "Order ID: %d\n" +
+                        "Product: %s (" +
+                        "%s)\n" +
+                        "Quantity: %d\n" +
+                        "Total Price: $%.2f\n" +
+                        "Status: %s\n" +
+                        "Order Date: %s",
+                order.getOrderId(),
+                order.getProductDto().getName(), // Assume ProductDto has getName()
+                order.getProductDto().getCategory(),
+                order.getQuantity(),
+                order.getProductDto().getPrice()*order.getQuantity(),
+                order.getStatus(),
+                order.getOrderDate()
+        );
+    }
+}

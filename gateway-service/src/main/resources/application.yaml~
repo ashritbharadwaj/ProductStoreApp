@@ -1,0 +1,76 @@
+server:
+  port: 8090
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+#      routes:
+#        - id: product-service
+#          uri: http://localhost:8084
+#          predicates:
+#            - Path=/api/products/**
+#          filters:
+#            - RewritePath=/api/products/(?<segment>.*), /${segment}
+#            - name: CircuitBreaker
+#              args:
+#                  name: productServiceCB
+#                  fallbackUri: forward:/fallback/product
+#        - id: order-service
+#          uri: http://localhost:8086
+#          predicates:
+#            - Path=/api/orders/**
+#          filters:
+#            - RewritePath=/api/orders/(?<segment>.*), /${segment}
+#            - name: CircuitBreaker
+#              args:
+#                  name: orderServiceCB
+#                  fallbackUri: forward:/fallback/order
+#        - id: inventory-service
+#          uri: http://localhost:8085
+#          predicates:
+#            - Path=/api/inventories/**
+#          filters:
+#            - RewritePath=/api/inventories/(?<segment>.*), /${segment}
+#            - name: CircuitBreaker
+#              args:
+#                  name: inventoryServiceCB
+#                  fallbackUri: forward:/fallback/inventory
+
+  application:
+    name: gateway
+
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://localhost:8070/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  endpoint:
+    gateway:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

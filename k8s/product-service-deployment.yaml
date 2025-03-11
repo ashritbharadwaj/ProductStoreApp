@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+      - name: product-service
+        image: pes1ug21cs120ashritbharadwaj/product-service:latest
+        ports:
+        - containerPort: 8084
+        env:
+        - name: SPRING_DATA_MONGODB_URI
+          value: "mongodb://docker-mongo.default.svc.cluster.local:27017/product-service"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+spec:
+  selector:
+    app: product-service
+  ports:
+    - protocol: TCP
+      port: 8084
+      targetPort: 8084
+      nodePort: 30084
+  type: NodePort

@@ -1,0 +1,3 @@
+INSERT INTO `order` (product_id, quantity, status, order_date, user_email) VALUES ('1L', 1, 'Created', NOW(), 'pes1202102346@pesu.pes.edu');
+INSERT INTO `order` (product_id, quantity, status, order_date, user_email) VALUES ('2L', 1, 'Created', NOW(), 'pes1202102346@pesu.pes.edu');
+INSERT INTO `order` (product_id, quantity, status, order_date, user_email) VALUES ('3L', 1, 'Created', NOW(), 'pes1202102346@pesu.pes.edu');

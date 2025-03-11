@@ -1,0 +1,4 @@
+package com.productstore.inventory.controller;
+
+public class InventoryExceptionHandler {
+}

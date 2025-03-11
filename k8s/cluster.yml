@@ -1,0 +1,32 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: dev-cluster
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 30090 # gateway-service
+    hostPort: 30090
+    protocol: TCP
+  - containerPort: 30087 # notify-service
+    hostPort: 30087
+    protocol: TCP
+  - containerPort: 30092 # kafka
+    hostPort: 30092
+    protocol: TCP
+  - containerPort: 30085 # inventory-service
+    hostPort: 30085
+    protocol: TCP
+  - containerPort: 30086 #order-service
+    hostPort: 30086
+    protocol: TCP
+  - containerPort: 30006 #mysql
+    hostPort: 30006
+    protocol: TCP
+  - containerPort: 30084 #product-service
+    hostPort: 30084
+    protocol: TCP
+  - containerPort: 30017 # mongodb
+    hostPort: 30017
+    protocol: TCP
+- role: worker
+- role: worker
